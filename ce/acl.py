@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import List, Optional, Union
 from pydantic import BaseModel
 
@@ -24,6 +23,7 @@ L4_PROTO = {
 L3_PROTO = {
     'esp': "50"
 }
+
 
 class ObjectGroupHostEntry(BaseModel):
     Host: Optional[str]
@@ -76,6 +76,3 @@ class Acl(BaseModel):
     Name: Optional[str]
     Id: Optional[int]
     Entries: List[AclL3Entry] = []
-
-
-

@@ -74,15 +74,15 @@ class HuaweiNetworkDevice(NetworkDevice):
                                 source_port.append([Port.Proto, f"source-port eq {Port.SourcePort}"])
                             elif Port.SourcePortRange:
                                 source_port.append([Port.Proto, f"source-port range {Port.SourcePortRange}"])
-                            elif len(og_source) == 0:
-                                source_port.append([Port.Proto, ""])
 
                             if Port.DestPort:
                                 dest_port.append([Port.Proto, f"destination-port eq {Port.DestPort}"])
                             elif Port.DestPortRange:
                                 dest_port.append([Port.Proto, f"destination-port range {Port.DestPortRange}"])
-                            elif len(dest_port) == 0:
-                                dest_port.append([Port.Proto, ""])
+                        if len(source_port) == 0:
+                            source_port.append([Port.Proto, ""])
+                        if len(dest_port) == 0:
+                            dest_port.append([Port.Proto, ""])
                         source_port_group = True
                     else:
                         logger.info(f"Unable to get Port Object {entry.SourcePortObject}")
@@ -118,6 +118,8 @@ class HuaweiNetworkDevice(NetworkDevice):
                 additional = ""
                 if entry.Proto == "icmp" and entry.ICMPType:
                     additional += f"icmp-type {entry.ICMPType}"
+                if entry.TimeRange:
+                    additional += f" time-range {entry.TimeRange}"
                 for s in source:
                     for sp in source_port:
                         for d in dest:

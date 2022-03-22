@@ -42,7 +42,8 @@ class CiscoNetworkDevice(NetworkDevice):
                         if entry_attributes[1] == "host":
                             new_entry = ObjectGroupHostEntry(Host=entry_attributes[2])
                         else:
-                            new_entry = ObjectGroupHostEntry(IPAddress=entry_attributes[1], Mask=entry_attributes[2])
+                            new_entry = ObjectGroupHostEntry(IPAddress=entry_attributes[1], \
+                                                             Mask=self.MaskToWildcard(entry_attributes[2]))
                         new_obj.Entries.append(new_entry)
                     else:
                         logger.info(f"Unable to parse entry")
@@ -102,7 +103,10 @@ class CiscoNetworkDevice(NetworkDevice):
             logger.debug(f"Parsing acl {acl.text}")
             acl_attributes = re.search("^ip access-list (\S+) (\S+)", acl.text)
             acl_type = acl_attributes[1]
-            acl_name = acl_attributes[2]
+            if acl_attributes[2].isdigit():
+                acl_name = f"Number_{acl_attributes[2]}"
+            else:
+                acl_name = acl_attributes[2]
             if acl_type == "standard":
                 acl_type_id = ACL_BASIC
             elif acl_type == "extended":
